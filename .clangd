@@ -7,3 +7,5 @@ CompileFlags:
   Remove:
     - -m*
     - -f*
+
+  CompilationDatabase: build/
