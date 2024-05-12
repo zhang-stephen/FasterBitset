@@ -68,6 +68,7 @@ Checks: >-
   -cppcoreguidelines-pro-type-reinterpret-cast,
   modernize-*,
   -modernize-avoid-c-arrays,
+  -modernize-use-nodiscard,
   -modernize-use-trailing-return-type,
   misc-*,
   -misc-non-private-member-variables-in-classes,

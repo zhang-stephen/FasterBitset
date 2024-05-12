@@ -1,0 +1,4 @@
+---
+CheckOptions:
+    - key: readability-identifier-naming.FunctionCase
+      value: camel_Snake_Back
