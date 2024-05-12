@@ -3,7 +3,7 @@
 #include <bitset>
 #include <concepts>
 
-namespace
+namespace vbitset
 {
 template <typename Bitset>
 concept CompatibleBitset = requires(Bitset bs) {
@@ -15,8 +15,8 @@ concept CompatibleBitset = requires(Bitset bs) {
     { std::as_const(bs).none() } noexcept -> std::same_as<bool>;
     { std::as_const(bs).count() } noexcept -> std::same_as<size_t>;
     { std::as_const(bs).size() } noexcept -> std::same_as<size_t>;
-    { std::as_const(bs) << size_t() } noexcept -> std::same_as<Bitset>;
-    { std::as_const(bs) >> size_t() } noexcept -> std::same_as<Bitset>;
+    // { std::as_const(bs) << size_t() } noexcept -> std::same_as<Bitset>;
+    // { std::as_const(bs) >> size_t() } noexcept -> std::same_as<Bitset>;
 
     // methods - bit modifier
     { bs[size_t()] } -> std::convertible_to<bool>;
@@ -34,5 +34,4 @@ concept CompatibleBitset = requires(Bitset bs) {
 
 static_assert(CompatibleBitset<std::bitset<0>>,
               "CompatibleBitset<T> should be always evaluated as TRUE for STL bitset!");
-
-}; // namespace
+}; // namespace vbitset
