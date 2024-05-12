@@ -1,0 +1,9 @@
+---
+CompileFlags:
+  Add:
+    - -xc++
+    - -std=c++20
+
+  Remove:
+    - -m*
+    - -f*

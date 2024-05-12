@@ -1,0 +1,53 @@
+---
+# Language: C, Cpp
+BasedOnStyle: WebKit
+
+# user-defined details
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments:
+    Enabled: true
+    AlignCompound: true
+AlignConsecutiveDeclarations: Consecutive
+AlignConsecutiveBitFields: Consecutive
+AlignConsecutiveMacros: Consecutive
+AlignEscapedNewlines: Right
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Empty
+AlignTrailingComments:
+    Kind: Always
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AlwaysBreakTemplateDeclarations: true
+BinPackArguments: false
+BinPackParameters: false
+BraceWrapping:
+    AfterCaseLabel: true
+    AfterClass: true
+    AfterControlStatement: Always
+    AfterExternBlock: false
+    AfterEnum: true
+    AfterFunction: true
+    AfterNamespace: true
+    AfterStruct: true
+    AfterUnion: true
+    BeforeElse: true
+    BeforeLambdaBody: false
+    BeforeWhile: false
+BreakBeforeConceptDeclarations: Always
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+BreakConstructorInitializers: BeforeComma
+BreakBeforeBraces: Custom
+ColumnLimit: 120
+EmptyLineBeforeAccessModifier: Always
+ExperimentalAutoDetectBinPacking: false
+FixNamespaceComments: true
+IncludeBlocks: Regroup
+IndentCaseBlocks: true
+NamespaceIndentation: None
+PointerAlignment: Left
+ReferenceAlignment: Left
+SpaceInEmptyBlock: false
+SpaceBeforeCaseColon: false
+UseTab: Never
+UseCRLF: false
