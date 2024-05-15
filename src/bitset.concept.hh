@@ -15,8 +15,9 @@ concept CompatibleBitset = requires(Bitset bs) {
     { std::as_const(bs).none() } noexcept -> std::same_as<bool>;
     { std::as_const(bs).count() } noexcept -> std::same_as<size_t>;
     { std::as_const(bs).size() } noexcept -> std::same_as<size_t>;
-    // { std::as_const(bs) << size_t() } noexcept -> std::same_as<Bitset>;
-    // { std::as_const(bs) >> size_t() } noexcept -> std::same_as<Bitset>;
+    { std::as_const(bs) << size_t() } noexcept -> std::same_as<Bitset>;
+    { std::as_const(bs) >> size_t() } noexcept -> std::same_as<Bitset>;
+    { ~std::as_const(bs) } noexcept -> std::same_as<Bitset>;
 
     // methods - bit modifier
     { bs[size_t()] } -> std::convertible_to<bool>;
@@ -29,7 +30,6 @@ concept CompatibleBitset = requires(Bitset bs) {
     { bs &= Bitset() } noexcept -> std::same_as<Bitset&>;
     { bs |= Bitset() } noexcept -> std::same_as<Bitset&>;
     { bs ^= Bitset() } noexcept -> std::same_as<Bitset&>;
-    { ~bs } noexcept -> std::same_as<Bitset>;
 };
 
 static_assert(CompatibleBitset<std::bitset<0>>,

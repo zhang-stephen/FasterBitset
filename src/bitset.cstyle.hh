@@ -5,18 +5,48 @@
 
 #include <algorithm>
 #include <bit>
-#include <limits>
 #include <numeric>
 
 namespace vbitset
 {
-template <size_t N>
-class BitsetCstyle : public BitsetBase
+template <size_t Nb>
+class BitsetCstyle : public BitsetBase<Nb>
 {
 public:
+    constexpr BitsetCstyle()  = default;
+    constexpr ~BitsetCstyle() = default;
+
+    auto operator<<(size_t pos) const noexcept
+    {
+        auto ret = BitsetCstyle<Nb>();
+
+        for (auto i = 0; i < numOfWords; i++)
+        {
+            const auto cursor = numOfWords - i - 1;
+            ret.storage[cursor]
+                = storage[cursor] << pos | (i == numOfWords - 1 ? 0 : storage[cursor - 1] >> (numOfBitsPerWord - pos));
+        }
+
+        return ret;
+    }
+
+    auto operator>>(size_t pos) const noexcept
+    {
+        auto ret = BitsetCstyle<Nb>();
+
+        for (auto i = 0; i < numOfWords; i++)
+        {
+            ret.storage[i] = storage[i] >> pos | (i == numOfWords - 1 ? 0 : storage[i + 1] << (numOfBitsPerWord - pos));
+        }
+
+        return ret;
+    }
+
     auto operator[](size_t pos) const
     {
-        return static_cast<bool>(storage[pos / numOfBitsPerUnit] >> (pos % numOfBitsPerUnit) & 1);
+        // NOTE: do not support modify bit via operator[], the bitset reference is not implemented
+        // to simplify the design
+        return static_cast<bool>(storage[pos / numOfBitsPerWord] >> (pos % numOfBitsPerWord) & 1);
     }
 
     auto test(size_t pos) const { return (*this)[pos]; }
@@ -29,8 +59,8 @@ public:
 
     auto all() const noexcept
     {
-        return std::count_if(cbegin(), cend(), [](auto&& v) { return v == std::numeric_limits<Unit>::max(); })
-            == numOfUnits;
+        return std::count_if(cbegin(), cend(), [](auto&& v) { return v == std::numeric_limits<WordType>::max(); })
+            == numOfWords;
     }
 
     auto count() const noexcept -> size_t
@@ -38,11 +68,11 @@ public:
         return std::accumulate(cbegin(), cend(), 0, [](auto&& init, auto&& v) { return init + std::popcount(v); });
     }
 
-    constexpr auto size() const noexcept { return N; }
+    constexpr auto size() const noexcept { return Nb; }
 
     auto& set() noexcept
     {
-        std::fill(begin(), end(), std::numeric_limits<Unit>::max());
+        std::fill(begin(), end(), std::numeric_limits<WordType>::max());
         return *this;
     }
 
@@ -50,11 +80,11 @@ public:
     {
         if (value)
         {
-            storage[pos / numOfUnits] |= 1 << pos % numOfUnits;
+            storage[pos / numOfBitsPerWord] |= 1 << pos % numOfBitsPerWord;
         }
         else
         {
-            storage[pos / numOfUnits] &= 1 << pos % numOfUnits;
+            storage[pos / numOfBitsPerWord] &= 1 << pos % numOfBitsPerWord;
         }
 
         return *this;
@@ -80,43 +110,44 @@ public:
 
     auto& flip(size_t pos) { return test(pos) ? reset(pos) : set(pos); }
 
-    auto& operator&=(const BitsetCstyle<N>& other) noexcept
+    auto& operator&=(const BitsetCstyle<Nb>& other) noexcept
     {
-        for (auto i = 0; i < numOfUnits; i++) storage[i] &= other.storage[i];
+        for (auto i = 0; i < numOfWords; i++) storage[i] &= other.storage[i];
         return *this;
     }
 
-    auto& operator|=(const BitsetCstyle<N>& other) noexcept
+    auto& operator|=(const BitsetCstyle<Nb>& other) noexcept
     {
-        for (auto i = 0; i < numOfUnits; i++) storage[i] |= other.storage[i];
+        for (auto i = 0; i < numOfWords; i++) storage[i] |= other.storage[i];
         return *this;
     }
 
-    auto& operator^=(const BitsetCstyle<N>& other) noexcept
+    auto& operator^=(const BitsetCstyle<Nb>& other) noexcept
     {
-        for (auto i = 0; i < numOfUnits; i++) storage[i] ^= other.storage[i];
+        for (auto i = 0; i < numOfWords; i++) storage[i] ^= other.storage[i];
         return *this;
     }
 
-    auto operator~() noexcept
+    auto operator~() const noexcept
     {
-        auto ret = BitsetCstyle<N>();
-        for (auto i = 0; i < numOfUnits; i++) ret.storage[i] = ~storage[i];
+        auto ret = BitsetCstyle<Nb>();
+        for (auto i = 0; i < numOfWords; i++) ret.storage[i] = ~storage[i];
         return ret;
     }
 
 private:
-    static_assert(N > 0, "number of bits should be greater than 0!");
-
-    static constexpr auto numOfUnits = divceil(N, numOfBitsPerUnit);
+    static_assert(Nb > 0, "number of bits should be greater than 0!");
 
     // HACK: they are not iterators for bitwise!
     constexpr auto* begin() noexcept { return storage; }
-    constexpr auto* end() noexcept { return storage + numOfUnits; }
+    constexpr auto* end() noexcept { return storage + numOfWords; }
     constexpr auto* cbegin() const noexcept { return storage; }
-    constexpr auto* cend() const noexcept { return storage + numOfUnits; }
+    constexpr auto* cend() const noexcept { return storage + numOfWords; }
 
-    Unit storage[numOfUnits] { 0 };
+    using WordType = BitsetBase<Nb>::WordType;
+    using BitsetBase<Nb>::storage;
+    using BitsetBase<Nb>::numOfBitsPerWord;
+    using BitsetBase<Nb>::numOfWords;
 };
 
 static_assert(CompatibleBitset<BitsetCstyle<1>>);

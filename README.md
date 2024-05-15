@@ -10,7 +10,7 @@
 # Preface
 It's a simple repo for PoC(Proving of Concept), for bitset performance on ARMv8-A or ARMv9-A.
 
-It's was inspired by a problem in my daily works: There is a real-time, performance-sensitive module, which uses `std::bitset` to hold some flags(~300 bits). The profiling results shows that most CPU cycles were comsumed for bitset oprations. I have to do something to improve the performance of bitset.
+It's was inspired by a problem in my daily works: There is a real-time, performance-sensitive module, which uses `std::bitset` to hold some flags(~300 bits). The profiling results shows that most CPU cycles were comsumed for bitset operations. I have to do something to improve the performance of bitset.
 
 Technically, the data structure, `std::bitset`, is not a STL container, even though it use array of `unsigned long` to store all of bits:
 

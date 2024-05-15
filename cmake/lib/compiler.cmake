@@ -15,6 +15,7 @@ target_compile_options(compiler
         -Wshadow
         -Wformat=2
         -Wunused
+        -g
 )
 
 target_compile_definitions(compiler
