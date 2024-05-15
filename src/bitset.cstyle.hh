@@ -110,6 +110,7 @@ private:
 
     static constexpr auto numOfUnits = divceil(N, numOfBitsPerUnit);
 
+    // HACK: they are not iterators for bitwise!
     constexpr auto* begin() noexcept { return storage; }
     constexpr auto* end() noexcept { return storage + numOfUnits; }
     constexpr auto* cbegin() const noexcept { return storage; }
